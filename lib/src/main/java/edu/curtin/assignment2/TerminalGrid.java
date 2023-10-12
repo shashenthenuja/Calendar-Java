@@ -61,7 +61,7 @@ public class TerminalGrid
         int terminalWidth = AnsiConsole.getTerminalWidth();
         if(terminalWidth < 1)
         {
-            terminalWidth = 80;
+            terminalWidth = 160;
         }
         return new TerminalGrid(ansiOut, terminalWidth);
     }
