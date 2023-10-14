@@ -64,6 +64,13 @@ public class Control {
                     break;
                 case "N":
                     eventList.add(new Event("New Event", LocalDateTime.of(2023, 10, 29, 02, 0), 20));
+                    eventList.add(new Event("New Event", LocalDateTime.of(2023, 10, 02, 03, 0), 60));
+                    eventList.add(new Event("New Event", LocalDateTime.of(2023, 11, 01, 00, 0), 90));
+                    displayCalendar();
+                    System.out.println();
+                    break;
+                case "M":
+                    eventList.add(new Event("All Day Event", LocalDateTime.of(2023, 11, 03, 00, 0), 0));
                     displayCalendar();
                     System.out.println();
                     break;
@@ -96,7 +103,7 @@ public class Control {
             cols.add(formattedDate);
         }
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             LocalTime currentTime = LocalTime.of(i, 0);
             String formattedTime = timeFormat.format(currentTime);
             rows.add(formattedTime);
@@ -107,13 +114,15 @@ public class Control {
             rows.add("All Day \nEvents");
         }        
 
-        for (int i = 0; i <= 3; i++) {
+        for (int i = 0; i <= 4; i++) {
             var row = new ArrayList<String>();
             for (int j = 0; j < 7; j++) {
                 String val = " ";
                 if (!eventList.isEmpty()) {
                     for (Event e : eventList) {
-                        if (e.getColumnIndex(currentDateTime) == j && e.getRowIndex() == i) {
+                        if (e.getColumnIndex(currentDateTime) == j && e.getRowIndex() == i && e.getEventDuration() != 0) {
+                            val = e.getEventName();
+                        }else if (e.getColumnIndex(currentDateTime) == j && e.getEventDuration() == 0 && i == 4) {
                             val = e.getEventName();
                         }
                     }

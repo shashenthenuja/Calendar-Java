@@ -1,6 +1,7 @@
 package edu.curtin.assignment2;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 public class Event {
@@ -15,7 +16,11 @@ public class Event {
     }
 
     public String getEventName() {
-        return eventName;
+        if (eventDuration != 0) {
+            return eventName + "\n Time: " + eventDate.toLocalTime() + "\n Duration: " + eventDuration + " Mins" ;
+        }else {
+            return eventName;
+        }
     }
 
     public LocalDateTime getEventDate() {
