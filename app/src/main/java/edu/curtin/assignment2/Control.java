@@ -62,6 +62,10 @@ public class Control {
                     currentDateTime = LocalDateTime.now();
                     displayCalendar();
                     break;
+                case "s":
+                    displayCalendar();
+                    searchEvents();
+                    break;
                 case "N":
                     eventList.add(new Event("New Event", LocalDateTime.of(2023, 10, 29, 02, 0), 20));
                     eventList.add(new Event("New Event", LocalDateTime.of(2023, 10, 02, 03, 0), 60));
@@ -121,9 +125,9 @@ public class Control {
                 if (!eventList.isEmpty()) {
                     for (Event e : eventList) {
                         if (e.getColumnIndex(currentDateTime) == j && e.getRowIndex() == i && e.getEventDuration() != 0) {
-                            val = e.getEventName();
+                            val = e.getEventDetails(bundle);
                         }else if (e.getColumnIndex(currentDateTime) == j && e.getEventDuration() == 0 && i == 4) {
-                            val = e.getEventName();
+                            val = e.getEventDetails(bundle);
                         }
                     }
                 }
@@ -135,6 +139,42 @@ public class Control {
         terminalGrid.print(listMessages, rows, cols);
         System.out.println();
 
+    }
+
+    public void searchEvents() {
+        try {
+            System.out.print("\n" + bundle.getString("ui_search_events") + " > ");
+        } catch (Exception e) {
+            System.out.print("\nSearch events > ");
+        }
+        String query = scan.next();
+        Event result = null;
+        for (Event event : eventList) {
+            if (event.getEventName().toLowerCase().contains(query.toLowerCase())) {
+                if (!event.getEventDate().isBefore(LocalDateTime.now()) 
+                    && !event.getEventDate().isAfter(LocalDateTime.now().plusYears(1))) {
+                    result = event;
+                    break;
+                }
+            }
+        }
+        if (result != null) {
+            currentDateTime = result.getEventDate();
+            displayCalendar();
+            try {
+                
+                System.out.println(bundle.getString("ui_event_details")+ " : \n " + result.getEventDetails(bundle));
+            } catch (Exception e) {
+                System.out.println("Event Details : \n " + result.getEventDetails(bundle));
+            }
+        }else {
+            displayCalendar();
+            try {
+                System.out.println(bundle.getString("ui_event_details") + " " + query);
+            } catch (Exception e) {
+                System.out.println("Event not found for query " + query);
+            }
+        }
     }
 
     public void languageMenu() {

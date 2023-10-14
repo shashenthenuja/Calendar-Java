@@ -1,8 +1,8 @@
 package edu.curtin.assignment2;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ResourceBundle;
 
 public class Event {
     private String eventName;
@@ -15,12 +15,21 @@ public class Event {
         this.eventDuration = eventDuration;
     }
 
-    public String getEventName() {
+    public String getEventDetails(ResourceBundle bundle) {
         if (eventDuration != 0) {
-            return eventName + "\n Time: " + eventDate.toLocalTime() + "\n Duration: " + eventDuration + " Mins" ;
-        }else {
+            try {
+                return eventName + "\n " + bundle.getString("ui_time") + ": " + eventDate.toLocalTime() + "\n "
+                        + bundle.getString("ui_duration") + ": " + eventDuration + " " + bundle.getString("ui_mins");
+            } catch (Exception e) {
+                return eventName + "\n Time: " + eventDate.toLocalTime() + "\n Duration: " + eventDuration + " Mins";
+            }
+        } else {
             return eventName;
         }
+    }
+
+    public String getEventName() {
+        return eventName;
     }
 
     public LocalDateTime getEventDate() {
