@@ -170,7 +170,7 @@ public class Control {
         }else {
             displayCalendar();
             try {
-                System.out.println(bundle.getString("ui_event_details") + " " + query);
+                System.out.println(bundle.getString("ui_event_not_found") + " " + query);
             } catch (Exception e) {
                 System.out.println("Event not found for query " + query);
             }
