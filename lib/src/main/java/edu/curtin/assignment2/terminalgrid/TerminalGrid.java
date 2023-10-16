@@ -1,4 +1,4 @@
-package edu.curtin.assignment2;
+package edu.curtin.assignment2.terminalgrid;
 
 import org.fusesource.jansi.*;
 import org.apache.commons.text.WordUtils;

@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = 'assignment2'
-include ':lib', ':app'
+include 'lib', 'app', 'api', 'notify-plugin', 'repeat-plugin'

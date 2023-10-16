@@ -1,9 +1,11 @@
-package edu.curtin.assignment2;
+package edu.curtin.assignment2.coreapp;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import edu.curtin.assignment2.terminalgrid.TerminalGrid;
 
 public class Control {
     private String lang = "";
@@ -11,10 +13,11 @@ public class Control {
     private ResourceBundle bundle;
     private LocalDateTime currentDateTime;
     private Locale locale;
-    private List<Event> eventList = new ArrayList<>();
+    private List<Event> eventList;
 
-    public Control(LocalDateTime currentDateTime) {
+    public Control(LocalDateTime currentDateTime, List<Event> eventList) {
         this.currentDateTime = currentDateTime;
+        this.eventList = eventList;
     }
 
     public void start() {
