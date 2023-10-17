@@ -2,63 +2,69 @@ package edu.curtin.calplugins;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 
 import edu.curtin.assignment2.pluginapi.PluginAPI;
+import edu.curtin.assignment2.pluginapi.API;
+import edu.curtin.assignment2.pluginapi.Event;
 
-public class Repeat implements PluginAPI {
+public class Repeat implements API {
 
-    private String[] args;
-    private LocalDateTime eventDate;
     private String eventName;
+    private LocalDateTime eventDate;
     private int eventDuration;
+    private int repeatInterval;
 
     @Override
-    public void configurePlugin(String[] args) {
-        this.args = args;
+    public void start(PluginAPI api) {
+        setArgs(api.getArgs());
+        creatEvent(api.getEvents());
     }
 
-    @Override
-    public void start() {
-        System.out.println("Name: " + args[0]);
-        System.out.println("Date: " + args[1]);
-        try {
-            for (int i = 2; i < args.length; i++) {
-                System.out.println("Args : " + args[i]);
-            }
-        } catch (Exception e) {
+    public void setArgs(Map<String, String> args) {
+        eventName = args.get("title");
+        eventDate = setDate(args.get("startDate"));
+        eventDuration = 0;
+        repeatInterval = Integer.parseInt(args.get("repeat"));
+        if (args.containsKey("startTime")) {
+            eventDate = setDateTime(args.get("startDate"), args.get("startTime"));
         }
-        eventName = args[0];
+        if (args.containsKey("duration")) {
+            eventDuration = Integer.parseInt(args.get("duration"));
+        }
+    }
 
-        String dateString = args[1];
-        String timeString = "00:00:00";
-        int duration = 0;
-        try {
-            timeString = args[2];
-            duration = Integer.parseInt(args[3]);
-        } catch (Exception e) {
+    public void creatEvent(List<Event> event) {
+        if (repeatInterval == 0) {
+            event.add(new Event(eventName, eventDate, eventDuration));
+        } else {
+            event.add(new Event(eventName, eventDate, eventDuration));
+
+            LocalDateTime endDate = eventDate.plusYears(1);
+
+            LocalDateTime currentDate = eventDate.plusDays(repeatInterval);
+            while (currentDate.isBefore(endDate)) {
+                event.add(new Event(eventName, currentDate, eventDuration));
+                currentDate = currentDate.plusDays(repeatInterval);
+            }
         }
-    
+    }
+
+    public LocalDateTime setDate(String date) {
+        String dateString = date;
+        String timeString = "00:00:00";
+
         String dateTimeString = dateString + "T" + timeString;
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        return LocalDateTime.parse(dateTimeString, formatter);
+    }
+
+    public LocalDateTime setDateTime(String date, String time) {
+        String dateString = date;
+        String dateTimeString = dateString + "T" + time;
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        eventDate = LocalDateTime.parse(dateTimeString, formatter);
-        eventDuration = duration;
-
+        return LocalDateTime.parse(dateTimeString, formatter);
     }
-
-    @Override
-    public LocalDateTime getEventDate() {
-        return eventDate;
-    }
-
-    @Override
-    public String getEventName() {
-        return eventName;
-    }
-
-    @Override
-    public int getEventDuration() {
-        return eventDuration;
-    }
-
 }

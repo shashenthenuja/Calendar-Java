@@ -1,4 +1,4 @@
-package edu.curtin.assignment2.coreapp;
+package edu.curtin.assignment2.pluginapi;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;

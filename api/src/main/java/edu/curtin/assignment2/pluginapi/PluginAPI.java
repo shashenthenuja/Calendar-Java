@@ -1,15 +1,16 @@
 package edu.curtin.assignment2.pluginapi;
 
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public interface PluginAPI {
-    void configurePlugin(String[] args);
+    void configurePlugin(Map<String, String> args, List<Event> eventList, ResourceBundle bundle);
 
-    void start();
+    List<Event> getEvents();
 
-    LocalDateTime getEventDate();
+    Map<String, String> getArgs();
 
-    String getEventName();
+    ResourceBundle getBundle();
 
-    int getEventDuration();
 }
