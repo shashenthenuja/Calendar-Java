@@ -38,8 +38,8 @@ public class App {
 
         Map<String, String> args2 = new HashMap<>();
         args2.put("title", "New Day");
-        args2.put("startDate", "2023-10-20");
-        args2.put("startTime", "01:00:00");
+        args2.put("startDate", "2023-10-21");
+        args2.put("startTime", "11:14:00");
         args2.put("duration", "60");
         args2.put("repeat", "0");
 
