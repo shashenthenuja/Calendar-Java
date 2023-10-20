@@ -12,9 +12,7 @@ public class LoaderAPI implements PluginAPI {
     private List<Event> eventList;
     private ResourceBundle bundle;
 
-
-    @Override
-    public void configurePlugin(Map<String, String> args, List<Event> eventList, ResourceBundle bundle) {
+    public LoaderAPI(Map<String, String> args, List<Event> eventList, ResourceBundle bundle) {
         this.args = args;
         this.eventList = eventList;
         this.bundle = bundle;
@@ -34,5 +32,5 @@ public class LoaderAPI implements PluginAPI {
     public ResourceBundle getBundle() {
         return bundle;
     }
-    
+
 }

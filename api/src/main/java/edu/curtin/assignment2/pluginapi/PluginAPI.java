@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public interface PluginAPI {
-    void configurePlugin(Map<String, String> args, List<Event> eventList, ResourceBundle bundle);
 
     List<Event> getEvents();
 
