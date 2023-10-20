@@ -20,7 +20,7 @@ public class App {
         Control control = new Control(currentDateTime, eventList, bundle, locale);
         pluginStart(eventList);
         Map<String, String> args3 = new HashMap<>();
-        args3.put("query", "assi");
+        args3.put("query", "test");
         LoaderAPI notify = new LoaderAPI(args3, eventList, bundle);
         runScript(eventList, args);
         control.start(notify);

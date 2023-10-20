@@ -157,10 +157,10 @@ public class Control {
             displayCalendar();
             try {
                 System.out.println(bundle.getString("ui_results") + " " + query + " : \n");
-                System.out.println(bundle.getString("ui_event_details") + " : \n " + result.getEventDetails(bundle));
+                System.out.println(bundle.getString("ui_event_details") + " : \n" + result.getSearchEventDetails(bundle));
             } catch (Exception e) {
                 System.out.println("Results for " + query + " : \n");
-                System.out.println("Event Details : \n " + result.getEventDetails(bundle));
+                System.out.println("Event Details : \n" + result.getSearchEventDetails(bundle));
             }
         } else {
             displayCalendar();

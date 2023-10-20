@@ -30,10 +30,10 @@ public class Notify implements API {
                         if (event.getEventName().toLowerCase().startsWith(notifyQuery.toLowerCase())) {
                             try {
                                 System.out.println("\n" + bundle.getString("ui_today_events") + " :");
-                                System.out.println(event.getEventDetails(bundle) + "\n");
+                                System.out.println(event.getSearchEventDetails(bundle) + "\n");
                             } catch (Exception e) {
-                                System.out.println("\n" + "Today's Events :" + e.getMessage());
-                                System.out.println(event.getEventDetails(bundle) + "\n");
+                                System.out.println("\n" + "Today's Events :");
+                                System.out.println(event.getSearchEventDetails(bundle) + "\n");
                             }
                         }
                     }
