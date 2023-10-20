@@ -145,8 +145,8 @@ public class Control {
         Event result = null;
         for (Event event : eventList) {
             if (event.getEventName().toLowerCase().contains(query.toLowerCase())) {
-                if (!event.getEventDate().isBefore(LocalDateTime.now())
-                        && !event.getEventDate().isAfter(LocalDateTime.now().plusYears(1))) {
+                if (!event.getEventDate().toLocalDate().isBefore(LocalDateTime.now().toLocalDate())
+                        && !event.getEventDate().toLocalDate().isAfter(LocalDateTime.now().toLocalDate().plusYears(1))) {
                     result = event;
                     break;
                 }
