@@ -27,7 +27,7 @@ public class Notify implements API {
             for (Event event : eventList) {
                 if (LocalDateTime.now().toLocalDate().equals(event.getEventDate().toLocalDate())) {
                     if (LocalDateTime.now().isAfter(event.getEventDate()) || event.getEventDuration() == 0) {
-                        if (event.getEventName().toLowerCase().startsWith(notifyQuery.toLowerCase())) {
+                        if (event.getEventName().toLowerCase().trim().contains(query.toLowerCase().trim())) {
                             try {
                                 System.out.println("\n" + bundle.getString("ui_today_events") + " :");
                                 System.out.println(event.getSearchEventDetails(bundle) + "\n");

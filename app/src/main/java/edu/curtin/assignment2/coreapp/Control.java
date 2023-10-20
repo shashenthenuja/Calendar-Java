@@ -141,10 +141,12 @@ public class Control {
         } catch (Exception e) {
             System.out.print("\nSearch events > ");
         }
-        String query = scan.next();
+        String query = scan.nextLine();
+        // clear any new lines left
+        query = scan.nextLine();
         Event result = null;
         for (Event event : eventList) {
-            if (event.getEventName().toLowerCase().contains(query.toLowerCase())) {
+            if (event.getEventName().toLowerCase().trim().contains(query.toLowerCase().trim())) {
                 if (!event.getEventDate().toLocalDate().isBefore(LocalDateTime.now().toLocalDate())
                         && !event.getEventDate().toLocalDate().isAfter(LocalDateTime.now().toLocalDate().plusYears(1))) {
                     result = event;
@@ -156,18 +158,18 @@ public class Control {
             currentDateTime = result.getEventDate();
             displayCalendar();
             try {
-                System.out.println(bundle.getString("ui_results") + " " + query + " : \n");
-                System.out.println(bundle.getString("ui_event_details") + " : \n" + result.getSearchEventDetails(bundle));
+                System.out.println(bundle.getString("ui_results") + " " + query + " :- \n");
+                System.out.println(bundle.getString("ui_event_details") + " : \n\n" + result.getSearchEventDetails(bundle));
             } catch (Exception e) {
                 System.out.println("Results for " + query + " : \n");
-                System.out.println("Event Details : \n" + result.getSearchEventDetails(bundle));
+                System.out.println("Event Details : \n\n" + result.getSearchEventDetails(bundle));
             }
         } else {
             displayCalendar();
             try {
-                System.out.println(bundle.getString("ui_event_not_found") + " " + query);
+                System.out.println(bundle.getString("ui_event_not_found") + " " + query + "!");
             } catch (Exception e) {
-                System.out.println("Event not found for query " + query);
+                System.out.println("Event not found for query " + query + "!");
             }
         }
     }
