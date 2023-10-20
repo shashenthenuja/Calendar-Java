@@ -18,6 +18,10 @@ public class LoaderAPI implements PluginAPI {
         this.bundle = bundle;
     }
 
+    public LoaderAPI(List<Event> eventList) {
+        this.eventList = eventList;
+    }
+
     @Override
     public List<Event> getEvents() {
         return eventList;
