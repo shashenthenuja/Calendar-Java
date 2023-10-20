@@ -92,7 +92,7 @@ public class Control {
         System.out.println(bundle.getString("ui_chosen_lang") + " : " + locale.getDisplayLanguage() + "\n");
 
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd MMMM yyyy", locale);
-        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm", locale);
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("hh:mm a", locale);
 
         for (int i = 0; i < 7; i++) {
             LocalDateTime futureDateTime = currentDateTime.plusDays(i);
