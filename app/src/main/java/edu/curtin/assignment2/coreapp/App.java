@@ -1,6 +1,9 @@
 package edu.curtin.assignment2.coreapp;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.*;
 import java.util.*;
 
@@ -17,13 +20,34 @@ public class App {
         Language lang = new Language();
         bundle = lang.getBundle();
         locale = lang.getLocale();
+        parseDate(args);
         Control control = new Control(currentDateTime, eventList, bundle, locale);
         pluginStart(eventList);
         Map<String, String> args3 = new HashMap<>();
         args3.put("query", "test day");
         LoaderAPI notify = new LoaderAPI(args3, eventList, bundle);
-        runScript(eventList, args);
+        //runScript(eventList, args);
         control.start(notify);
+    }
+
+    public static void parseDate(String[] args) {
+        DSLParser parser = null;
+        try {
+            String filePath = args[0];
+            String content = new String(Files.readAllBytes(Paths.get(filePath)), StandardCharsets.UTF_8);
+            parser = new DSLParser(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        List<Map<String, String>> data = new ArrayList<>();
+        try {
+            data = parser.file();
+        } catch (Exception e) {
+            System.err.println("[PARSING EXCEPTION] Invalid Input " + e.getLocalizedMessage());
+            System.exit(0);
+        }
+        System.out.println(data);
     }
 
     public static void pluginStart(List<Event> eventList) {

@@ -1,0 +1,158 @@
+PARSER_BEGIN(DSLParser)
+package edu.curtin.assignment2.coreapp;
+
+import java.util.*;
+
+public class DSLParser
+{}
+
+PARSER_END(DSLParser)
+
+SKIP : {
+    " " | "\n" | "\t" | "\r"
+}
+
+// Different state for when we're inside a string. We switch to IN_STRING when we see a double quote, and switch
+// back to DEFAULT when we see the next one.
+<IN_STRING> TOKEN : {
+    < STR_END: "\"" > : DEFAULT
+}
+
+TOKEN: {
+    < BREAK: " " | "\n" | "\t" | "\r\n" > |
+
+    < DIGIT: ["0"-"9"] > |
+    < NUMBER: <DIGIT> ( <DIGIT> )* > |
+    < STR_START: "\"" > : IN_STRING |
+
+    < DATE:  <DIGIT> <DIGIT> <DIGIT> <DIGIT> "-" <DIGIT> <DIGIT> "-" <DIGIT> <DIGIT> > |
+    < TIME:  <DIGIT> <DIGIT> ":" <DIGIT> <DIGIT> ":" <DIGIT> <DIGIT> > |
+
+    < EVENT_DECLARATION: "event" ( <BREAK> )* > |
+    < EVENT_DATE: <DATE> ( <BREAK> )* > |
+    < EVENT_TIME: <TIME> ( <BREAK> )* > |
+    < EVENT_DURATION: <NUMBER> ( <BREAK> )* > |
+    < EVENT_TITLE: <STR_START> ( ~["\""] )* <STR_END> > |
+
+    < PLUGIN_DECLARATION: "plugin" ( <BREAK> )* > |
+    < PLUGIN_IDENTIFIER: (["a"-"z", "A"-"Z", "_"] (["a"-"z", "A"-"Z", "0"-"9", "_", "."])* ) > |
+
+    < SCRIPT_DECLARATION: "script" ( <BREAK> )* > |
+    < SCRIPT_CONTENT: "\"" (~["\""] | "\"\"")* "\"" >
+}
+
+List<Map<String, String>> file() :
+{
+  List<Map<String, String>> resultList = new ArrayList<Map<String, String>>();
+  Map<String, String> map;
+}
+{
+  (<BREAK>)? (
+    map = event()
+    {
+      resultList.add(map);
+    }
+  |
+    map = plugin()
+    {
+      resultList.add(map);
+    }
+  |
+    map = script()
+    {
+      resultList.add(map);
+    }
+  )* (<BREAK>)?
+  <EOF>
+  {
+    return resultList;
+  }
+}
+
+public Map<String, String> event() :
+{
+  Token eventToken, dateToken, stringToken;
+  Token timeToken = null;
+  Token numberToken = null;
+  Map<String, String> data = new HashMap<String, String>();
+}
+{
+  eventToken = <EVENT_DECLARATION> dateToken = <EVENT_DATE> ("all-day" { data.put("duration", "0"); } | timeToken = <EVENT_TIME> numberToken = <EVENT_DURATION>) stringToken = <EVENT_TITLE> (<BREAK>)?
+  {
+    String event = eventToken.image;
+    String date = dateToken.image;
+    String time = "";
+    String number = "";
+    String quotedString = stringToken.image;
+    if (timeToken != null && timeToken.image != null) {
+      time = timeToken.image;
+      number = numberToken.image;
+      data.put("startTime", time);
+      data.put("duration", number);
+    }
+
+    data.put("startDate", date);
+    data.put("eventName", quotedString.replace("\"", ""));
+  }
+  {
+    return data;
+  }
+}
+
+public Map<String, String> plugin() :
+{
+  Token pluginIdent;
+  Token pluginKey;
+  Token pluginData;
+  int count = 0;
+  Map<String, String> data = new HashMap<String, String>();
+}
+{
+  <PLUGIN_DECLARATION> pluginIdent = <PLUGIN_IDENTIFIER> ( <BREAK> )* "{" ( <BREAK> )*  
+  (
+    (
+      pluginKey = <PLUGIN_IDENTIFIER> ( <BREAK> )* ":" ( <BREAK> )* pluginData = <EVENT_TITLE> (<BREAK>)?
+      { 
+        data.put("pluginKey" + count, pluginKey.image.replace("\"", ""));
+        data.put("pluginData" + count, pluginData.image.replace("\"", ""));
+        count++;
+      }
+    )
+    ("," (<BREAK>)?
+      pluginKey = <PLUGIN_IDENTIFIER> ( <BREAK> )* ":" ( <BREAK> )* pluginData = <EVENT_TITLE> (<BREAK>)?
+      { 
+        data.put("pluginKey" + count, pluginKey.image.replace("\"", ""));
+        data.put("pluginData" + count, pluginData.image.replace("\"", ""));
+        count++;
+      }
+    )*
+  )? "}" (<BREAK>)?
+  {
+    String pluginName = pluginIdent.image;
+    data.put("pluginName", pluginName.replace("\"", ""));
+  }
+  {
+    return data;
+  }
+}
+
+public Map<String, String> script() :
+{
+  Token scriptData = null;
+  Map<String, String> data = new HashMap<String, String>();
+}
+{
+  (<BREAK>)? <SCRIPT_DECLARATION> scriptData = <SCRIPT_CONTENT> (<BREAK>)?
+  {
+    if (scriptData != null && scriptData.image != null) {
+      String info = scriptData.image.replace("\"\"", "\"");
+      if (info.startsWith("\"") && info.endsWith("\"")) {
+            String infoModified = info.substring(1, info.length() - 1);
+            data.put("script", infoModified);
+      }
+    }
+  }
+  {
+    return data;
+  }
+}

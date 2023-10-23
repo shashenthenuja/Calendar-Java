@@ -1,9 +1,10 @@
+# Script to add events 
+print("Starting script...")
 from java.util import HashMap
 from java.time import LocalDateTime
 from java.time.format import DateTimeFormatter
 from edu.curtin.assignment2.pluginapi import Event
 
-print("Starting script...")
 
 holidays = {
     "Christmas Day": "2023-12-25",

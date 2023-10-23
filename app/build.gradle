@@ -9,6 +9,7 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
     id 'pmd'
+    id 'com.intershop.gradle.javacc' version '4.0.1'
 }
 
 repositories {
@@ -49,6 +50,15 @@ pmd {
     rulesMinimumPriority = 5
     ruleSets = []
     ruleSetFiles = files('../saed-pmd-rules.xml')
+}
+
+javacc {
+    configs {
+        createmyparser {
+            inputFile = file('src/main/jj/parser.jj')
+            packageName = 'edu.curtin.assignment2.coreapp'
+        }
+    }
 }
 
 tasks.run.configure {
