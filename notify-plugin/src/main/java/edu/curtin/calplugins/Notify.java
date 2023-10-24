@@ -9,6 +9,13 @@ import edu.curtin.assignment2.pluginapi.API;
 import edu.curtin.assignment2.pluginapi.Event;
 import edu.curtin.assignment2.pluginapi.PluginAPI;
 
+/* *******************************************************************
+* File:       Notify.java
+* Author:     G.G.T.Shashen
+* Created:    17/10/2023
+* Modified:   25/10/2023
+* Desc:       Notify plugin implementing the main API to notify about events
+***********************************************************************/
 public class Notify implements API {
 
     private String query;
@@ -18,6 +25,7 @@ public class Notify implements API {
 
     @Override
     public void start(PluginAPI api) {
+        // get the data from the api
         this.query = api.getArgs().get("query");
         this.eventList = api.getEvents();
         this.bundle = api.getBundle();
@@ -25,6 +33,10 @@ public class Notify implements API {
         notifyEvents();
     }
 
+    /*
+     * validate the notify user about the event details according
+     * to the notify query and current locale
+     */
     public void notifyEvents() {
         if (!eventList.isEmpty()) {
             for (Event event : eventList) {

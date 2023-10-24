@@ -5,12 +5,22 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+/* *******************************************************************
+* File:       Language.java
+* Author:     G.G.T.Shashen
+* Created:    24/10/2023
+* Modified:   25/10/2023
+* Desc:       Class to handle the language choice of the user
+***********************************************************************/
 public class Language {
     private Scanner scan = new Scanner(System.in);
     private String lang = "";
     private Locale locale;
     private ResourceBundle bundle;
 
+    /*
+     * display the language menu for the user to select any language using IETF tags
+     */
     public void languageMenu() {
         while (true) {
             System.out.print("\033[H\033[2J");
@@ -19,6 +29,7 @@ public class Language {
             System.out.println("[1] Custom Language (Eg. en-US, si-LK) \n");
             System.out.print("\n> ");
             String userInput = scan.next();
+            // set the language choice of the user
             if (userInput.equals("0")) {
                 lang = "default";
                 break;
@@ -33,6 +44,10 @@ public class Language {
         }
     }
 
+    /*
+     * set the locale of the application according to the system default language or
+     * selected IETF tag
+     */
     public void setLocale(String lang) {
         if (lang.equals("default")) {
             Locale defaultLocale = Locale.getDefault();

@@ -8,6 +8,13 @@ import java.util.ResourceBundle;
 import edu.curtin.assignment2.pluginapi.Event;
 import edu.curtin.assignment2.pluginapi.PluginAPI;
 
+/* *******************************************************************
+* File:       LoaderAPI.java
+* Author:     G.G.T.Shashen
+* Created:    16/10/2023
+* Modified:   25/10/2023
+* Desc:       PluginAPI implementation to load the data to the plugins/scripts
+***********************************************************************/
 public class LoaderAPI implements PluginAPI {
     private Map<String, String> args;
     private List<Event> eventList;
@@ -21,6 +28,7 @@ public class LoaderAPI implements PluginAPI {
         this.locale = locale;
     }
 
+    /* copy constructor to only take event list when creating object */
     public LoaderAPI(List<Event> eventList) {
         this.eventList = eventList;
     }

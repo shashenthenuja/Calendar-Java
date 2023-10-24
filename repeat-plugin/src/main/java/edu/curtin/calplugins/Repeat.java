@@ -9,6 +9,14 @@ import edu.curtin.assignment2.pluginapi.PluginAPI;
 import edu.curtin.assignment2.pluginapi.API;
 import edu.curtin.assignment2.pluginapi.Event;
 
+/* *******************************************************************
+* File:       Repeat.java
+* Author:     G.G.T.Shashen
+* Created:    17/10/2023
+* Modified:   25/10/2023
+* Desc:       Repeat plugin implementing the main API to create
+              repetitive events
+***********************************************************************/
 public class Repeat implements API {
 
     private String eventName;
@@ -18,10 +26,12 @@ public class Repeat implements API {
 
     @Override
     public void start(PluginAPI api) {
+        // load and set the data from the api
         setArgs(api.getArgs());
         creatEvent(api.getEvents());
     }
 
+    /* validate and convert the string data to objects to use as Events */
     public void setArgs(Map<String, String> args) {
         eventName = args.get("title");
         eventDate = setDate(args.get("startDate"));
@@ -35,6 +45,7 @@ public class Repeat implements API {
         }
     }
 
+    /* create repetivite events and add them to the event list */
     public void creatEvent(List<Event> event) {
         if (repeatInterval == 0) {
             event.add(new Event(eventName, eventDate, eventDuration));
@@ -51,6 +62,7 @@ public class Repeat implements API {
         }
     }
 
+    /* convert and set date from string to localdatetime object */
     public LocalDateTime setDate(String date) {
         String dateString = date;
         String timeString = "00:00:00";
@@ -60,6 +72,7 @@ public class Repeat implements API {
         return LocalDateTime.parse(dateTimeString, formatter);
     }
 
+    /* convert and set date and time from strings to localdatetime object */
     public LocalDateTime setDateTime(String date, String time) {
         String dateString = date;
         String dateTimeString = dateString + "T" + time;
