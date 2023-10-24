@@ -35,7 +35,12 @@ public class Language {
 
     public void setLocale(String lang) {
         if (lang.equals("default")) {
-            locale = Locale.US;
+            Locale defaultLocale = Locale.getDefault();
+            String country = defaultLocale.getCountry();
+            if (country.isEmpty()) {
+                defaultLocale = Locale.US;
+            }
+            locale = defaultLocale;
             bundle = ResourceBundle.getBundle("bundle", locale);
         } else {
             try {
