@@ -25,12 +25,12 @@ public class DataLoader {
                     if (map.get("duration").equals("0")) {
                         String eventName = map.get("eventName");
                         int duration = 0;
-                        LocalDateTime date = setDate(map.get("startDate"));
+                        LocalDateTime date = configDate(map.get("startDate"));
                         eventList.add(new Event(eventName, date, duration));
                     } else {
                         String eventName = map.get("eventName");
                         int duration = Integer.parseInt(map.get("duration"));
-                        LocalDateTime date = setDateTime(map.get("startDate"),
+                        LocalDateTime date = configDateTime(map.get("startDate"),
                                 map.get("startTime"));
                         eventList.add(new Event(eventName, date, duration));
                     }
@@ -39,40 +39,32 @@ public class DataLoader {
         }
     }
 
-    public void loadPlugins() {
+    public void loadPlugins() throws ReflectiveOperationException {
         if (!data.isEmpty()) {
             for (Map<String, String> map : data) {
                 if (map.get("type").equals("plugin")) {
                     String className = map.get("pluginName");
-                    try {
-                        LoaderAPI pluginAPI = new LoaderAPI(map, eventList, bundle);
-                        if (map.get("pluginName").equals("edu.curtin.calplugins.Notify")) {
-                            notifyList.add(pluginAPI);
-                        } else {
-                            new PluginLoader().loadPlugin(className, pluginAPI);
-                            System.out.println(className + " : Plugin Loaded Sucessfully!");
-                        }
-                    } catch (Exception e) {
-                        System.out.println(className + " : Failed to load!");
+                    LoaderAPI pluginAPI = new LoaderAPI(map, eventList, bundle);
+                    if (map.get("pluginName").equals("edu.curtin.calplugins.Notify")) {
+                        notifyList.add(pluginAPI);
+                    } else {
+                        new PluginLoader().loadPlugin(className, pluginAPI);
+                        System.out.println(className + " : Plugin Loaded Sucessfully!");
                     }
                 }
             }
         }
     }
 
-    public void loadScripts() {
+    public void loadScripts() throws ReflectiveOperationException {
         if (!data.isEmpty()) {
             for (Map<String, String> map : data) {
                 if (map.get("type").equals("script")) {
                     String script = map.get("script");
-                    try {
-                        ScriptHandler scriptLoad = new ScriptHandler();
-                        LoaderAPI api = new LoaderAPI(eventList);
-                        scriptLoad.runScript(api, script);
-                        System.out.println("Script Loaded Sucessfully!");
-                    } catch (Exception e) {
-                        System.out.println("Script Failed to load!");
-                    }
+                    ScriptHandler scriptLoad = new ScriptHandler();
+                    LoaderAPI api = new LoaderAPI(eventList);
+                    scriptLoad.runScript(api, script);
+                    System.out.println("Script Loaded Sucessfully!");
                 }
             }
         }
@@ -82,7 +74,7 @@ public class DataLoader {
         return notifyList;
     }
 
-    public LocalDateTime setDate(String date) {
+    public LocalDateTime configDate(String date) {
         String dateString = date;
         String timeString = "00:00:00";
 
@@ -91,7 +83,7 @@ public class DataLoader {
         return LocalDateTime.parse(dateTimeString, formatter);
     }
 
-    public LocalDateTime setDateTime(String date, String time) {
+    public LocalDateTime configDateTime(String date, String time) {
         String dateString = date;
         String dateTimeString = dateString + "T" + time;
 

@@ -12,8 +12,8 @@ public class PluginLoader {
             plugin.start(api);
 
             return (API) plugin;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ReflectiveOperationException e) {
+            System.out.println("Failed to load plugin " + e.getLocalizedMessage());
             return null;
         }
     }

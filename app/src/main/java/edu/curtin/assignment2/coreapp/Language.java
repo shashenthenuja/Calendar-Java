@@ -1,6 +1,7 @@
 package edu.curtin.assignment2.coreapp;
 
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -9,11 +10,6 @@ public class Language {
     private String lang = "";
     private Locale locale;
     private ResourceBundle bundle;
-
-    public Language() {
-        languageMenu();
-        setLocale(lang);
-    }
 
     public void languageMenu() {
         while (true) {
@@ -45,7 +41,7 @@ public class Language {
             try {
                 locale = Locale.forLanguageTag(lang);
                 bundle = ResourceBundle.getBundle("bundle", locale);
-            } catch (Exception e) {
+            } catch (MissingResourceException e) {
                 locale = Locale.forLanguageTag(lang);
                 bundle = ResourceBundle.getBundle("bundle", Locale.US);
             }
@@ -58,6 +54,10 @@ public class Language {
 
     public Locale getLocale() {
         return locale;
+    }
+
+    public String getLang() {
+        return lang;
     }
 
 }

@@ -16,60 +16,44 @@ public class FileIO {
         this.fileName = args[0];
     }
 
-    public void parseFile() {
-        String content = "";
+    public void parseFile() throws ParseException, IOException {
         if (fileName.contains("utf8")) {
-            content = convert8();
+            String content = convert8();
             parseData(content);
         } else if (fileName.contains("utf16")) {
-            content = convert16();
+            String content = convert16();
             parseData(content);
         } else if (fileName.contains("utf32")) {
-            content = convert32();
+            String content = convert32();
             parseData(content);
         } else {
-            content = convert8();
+            String content = convert8();
             parseData(content);
         }
     }
 
     @SuppressWarnings("static-access")
-    public void parseData(String content) {
+    public void parseData(String content) throws ParseException {
         DSLParser parser = new DSLParser(new StringReader(content));
-        try {
-            data = parser.file();
-        } catch (Exception e) {
-            System.out.println("Failed to parse data : " + e.getLocalizedMessage());
-        }
+        data = parser.file();
     }
 
-    public String convert8() {
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
-            return content;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public String convert8() throws IOException {
+        String content = new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_8);
+        return content;
     }
 
-    public String convert16() {
-        try {
-            String content = new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_16);
-            return content;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public String convert16() throws IOException {
+        String content = new String(Files.readAllBytes(Paths.get(fileName)), StandardCharsets.UTF_16);
+        return content;
     }
 
     public String convert32() {
         Path path = Paths.get(fileName);
-
-        try (FileInputStream fileInput = new FileInputStream(path.toFile());
+        try (
+                FileInputStream fileInput = new FileInputStream(path.toFile());
                 InputStreamReader inputStream = new InputStreamReader(fileInput, Charset.forName("UTF-32"));
-                BufferedReader bReader = new BufferedReader(inputStream)) {
-
+                BufferedReader bReader = new BufferedReader(inputStream);) {
             StringBuilder content = new StringBuilder();
             String line;
             while ((line = bReader.readLine()) != null) {
@@ -77,7 +61,7 @@ public class FileIO {
             }
             return content.toString();
         } catch (IOException e) {
-            System.out.println("Failed to read!");
+            System.out.println("Failed to parse file!");
         }
         return null;
     }

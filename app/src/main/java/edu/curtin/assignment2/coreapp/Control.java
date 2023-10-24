@@ -24,7 +24,7 @@ public class Control {
         this.locale = locale;
     }
 
-    public void start() {
+    public void start() throws ReflectiveOperationException {
         displayCalendar();
         boolean cont = true;
         while (cont) {
@@ -108,7 +108,7 @@ public class Control {
         }
         try {
             rows.add(bundle.getString("ui_all_day_events"));
-        } catch (Exception e) {
+        } catch (MissingResourceException  e) {
             rows.add("All Day \nEvents");
         }
 
@@ -139,12 +139,12 @@ public class Control {
     public void searchEvents() {
         try {
             System.out.print("\n" + bundle.getString("ui_search_events") + " > ");
-        } catch (Exception e) {
+        } catch (MissingResourceException  e) {
             System.out.print("\nSearch events > ");
         }
-        String query = scan.nextLine();
         // clear any new lines left
-        query = scan.nextLine();
+        scan.nextLine();
+        String query = scan.nextLine();
         Event result = null;
         for (Event event : eventList) {
             if (event.getEventName().toLowerCase().trim().contains(query.toLowerCase().trim())) {
@@ -163,7 +163,7 @@ public class Control {
                 System.out.println(bundle.getString("ui_results") + " " + query + " :- \n");
                 System.out.println(
                         bundle.getString("ui_event_details") + " : \n\n" + result.getSearchEventDetails(bundle));
-            } catch (Exception e) {
+            } catch (MissingResourceException e) {
                 System.out.println("Results for " + query + " : \n");
                 System.out.println("Event Details : \n\n" + result.getSearchEventDetails(bundle));
             }
@@ -171,20 +171,16 @@ public class Control {
             displayCalendar();
             try {
                 System.out.println(bundle.getString("ui_event_not_found") + " " + query + "!");
-            } catch (Exception e) {
+            } catch (MissingResourceException e) {
                 System.out.println("Event not found for query " + query + "!");
             }
         }
     }
 
-    public void notifyEvents() {
+    public void notifyEvents() throws ReflectiveOperationException {
         for (LoaderAPI api : notifyList) {
             if (api != null) {
-                try {
-                    new PluginLoader().loadPlugin("edu.curtin.calplugins.Notify", api);
-                } catch (Exception e) {
-                    System.out.println("Failed to load notify plugin!");
-                }
+                new PluginLoader().loadPlugin("edu.curtin.calplugins.Notify", api);
             }
         }
     }
