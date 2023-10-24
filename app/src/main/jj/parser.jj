@@ -12,8 +12,6 @@ SKIP : {
     " " | "\n" | "\t" | "\r"
 }
 
-// Different state for when we're inside a string. We switch to IN_STRING when we see a double quote, and switch
-// back to DEFAULT when we see the next one.
 <IN_STRING> TOKEN : {
     < STR_END: "\"" > : DEFAULT
 }
