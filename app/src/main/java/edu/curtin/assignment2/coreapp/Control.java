@@ -6,7 +6,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import edu.curtin.assignment2.pluginapi.Event;
-import edu.curtin.assignment2.pluginapi.PluginAPI;
 import edu.curtin.assignment2.terminalgrid.TerminalGrid;
 
 public class Control {
@@ -15,19 +14,21 @@ public class Control {
     private LocalDateTime currentDateTime;
     private Locale locale;
     private List<Event> eventList;
+    private List<LoaderAPI> notifyList;
 
-    public Control(LocalDateTime currentDateTime, List<Event> eventList, ResourceBundle bundle, Locale locale) {
+    public Control(LocalDateTime currentDateTime, List<Event> eventList, List<LoaderAPI> notifyList, ResourceBundle bundle, Locale locale) {
         this.currentDateTime = currentDateTime;
         this.eventList = eventList;
+        this.notifyList = notifyList;
         this.bundle = bundle;
         this.locale = locale;
     }
 
-    public void start(PluginAPI notifyApi) {
+    public void start() {
         displayCalendar();
         boolean cont = true;
         while (cont) {
-            notify(notifyApi);
+            notifyEvents();
             System.out.print("\n> ");
             String userInput = scan.next();
             switch (userInput) {
@@ -100,7 +101,7 @@ public class Control {
             cols.add(formattedDate);
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 24; i++) {
             LocalTime currentTime = LocalTime.of(i, 0);
             String formattedTime = timeFormat.format(currentTime);
             rows.add(formattedTime);
@@ -111,7 +112,7 @@ public class Control {
             rows.add("All Day \nEvents");
         }
 
-        for (int i = 0; i <= 4; i++) {
+        for (int i = 0; i <= 24; i++) {
             var row = new ArrayList<String>();
             for (int j = 0; j < 7; j++) {
                 String val = " ";
@@ -120,7 +121,7 @@ public class Control {
                         if (e.getColumnIndex(currentDateTime) == j && e.getRowIndex() == i
                                 && e.getEventDuration() != 0) {
                             val = e.getEventDetails(bundle);
-                        } else if (e.getColumnIndex(currentDateTime) == j && e.getEventDuration() == 0 && i == 4) {
+                        } else if (e.getColumnIndex(currentDateTime) == j && e.getEventDuration() == 0 && i == 24) {
                             val = e.getEventDetails(bundle);
                         }
                     }
@@ -148,7 +149,8 @@ public class Control {
         for (Event event : eventList) {
             if (event.getEventName().toLowerCase().trim().contains(query.toLowerCase().trim())) {
                 if (!event.getEventDate().toLocalDate().isBefore(LocalDateTime.now().toLocalDate())
-                        && !event.getEventDate().toLocalDate().isAfter(LocalDateTime.now().toLocalDate().plusYears(1))) {
+                        && !event.getEventDate().toLocalDate()
+                                .isAfter(LocalDateTime.now().toLocalDate().plusYears(1))) {
                     result = event;
                     break;
                 }
@@ -159,7 +161,8 @@ public class Control {
             displayCalendar();
             try {
                 System.out.println(bundle.getString("ui_results") + " " + query + " :- \n");
-                System.out.println(bundle.getString("ui_event_details") + " : \n\n" + result.getSearchEventDetails(bundle));
+                System.out.println(
+                        bundle.getString("ui_event_details") + " : \n\n" + result.getSearchEventDetails(bundle));
             } catch (Exception e) {
                 System.out.println("Results for " + query + " : \n");
                 System.out.println("Event Details : \n\n" + result.getSearchEventDetails(bundle));
@@ -174,11 +177,14 @@ public class Control {
         }
     }
 
-    public void notify(PluginAPI notifyApi) {
-        if (notifyApi != null) {
-            try {
-                new PluginLoader().loadPlugin("edu.curtin.calplugins.Notify", notifyApi);
-            } catch (Exception e) {
+    public void notifyEvents() {
+        for (LoaderAPI api : notifyList) {
+            if (api != null) {
+                try {
+                    new PluginLoader().loadPlugin("edu.curtin.calplugins.Notify", api);
+                } catch (Exception e) {
+                    System.out.println("Failed to load notify plugin!");
+                }
             }
         }
     }
