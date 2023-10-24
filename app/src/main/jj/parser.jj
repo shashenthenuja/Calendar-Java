@@ -32,7 +32,7 @@ TOKEN: {
     < EVENT_DATE: <DATE> ( <BREAK> )* > |
     < EVENT_TIME: <TIME> ( <BREAK> )* > |
     < EVENT_DURATION: <NUMBER> ( <BREAK> )* > |
-    < EVENT_TITLE: <STR_START> ( ~["\""] )* <STR_END> > |
+    < EVENT_TITLE: <STR_START> ( ~["\""] )* <STR_END> ( <BREAK> )* > |
 
     < PLUGIN_DECLARATION: "plugin" ( <BREAK> )* > |
     < PLUGIN_IDENTIFIER: (["a"-"z", "A"-"Z", "_"] (["a"-"z", "A"-"Z", "0"-"9", "_", "."])* ) > |
@@ -75,6 +75,7 @@ public Map<String, String> event() :
   Token timeToken = null;
   Token numberToken = null;
   Map<String, String> data = new HashMap<String, String>();
+  data.put("type", "event");
 }
 {
   eventToken = <EVENT_DECLARATION> dateToken = <EVENT_DATE> ("all-day" { data.put("duration", "0"); } | timeToken = <EVENT_TIME> numberToken = <EVENT_DURATION>) stringToken = <EVENT_TITLE> (<BREAK>)?
@@ -87,12 +88,12 @@ public Map<String, String> event() :
     if (timeToken != null && timeToken.image != null) {
       time = timeToken.image;
       number = numberToken.image;
-      data.put("startTime", time);
-      data.put("duration", number);
+      data.put("startTime", time.strip());
+      data.put("duration", number.strip());
     }
 
-    data.put("startDate", date);
-    data.put("eventName", quotedString.replace("\"", ""));
+    data.put("startDate", date.strip());
+    data.put("eventName", quotedString.strip().replace("\"", ""));
   }
   {
     return data;
@@ -104,8 +105,8 @@ public Map<String, String> plugin() :
   Token pluginIdent;
   Token pluginKey;
   Token pluginData;
-  int count = 0;
   Map<String, String> data = new HashMap<String, String>();
+  data.put("type", "plugin");
 }
 {
   <PLUGIN_DECLARATION> pluginIdent = <PLUGIN_IDENTIFIER> ( <BREAK> )* "{" ( <BREAK> )*  
@@ -113,22 +114,18 @@ public Map<String, String> plugin() :
     (
       pluginKey = <PLUGIN_IDENTIFIER> ( <BREAK> )* ":" ( <BREAK> )* pluginData = <EVENT_TITLE> (<BREAK>)?
       { 
-        data.put("pluginKey" + count, pluginKey.image.replace("\"", ""));
-        data.put("pluginData" + count, pluginData.image.replace("\"", ""));
-        count++;
+        data.put(pluginKey.image.strip().replace("\"", ""), pluginData.image.strip().replace("\"", ""));
       }
     )
     ("," (<BREAK>)?
       pluginKey = <PLUGIN_IDENTIFIER> ( <BREAK> )* ":" ( <BREAK> )* pluginData = <EVENT_TITLE> (<BREAK>)?
       { 
-        data.put("pluginKey" + count, pluginKey.image.replace("\"", ""));
-        data.put("pluginData" + count, pluginData.image.replace("\"", ""));
-        count++;
+        data.put(pluginKey.image.strip().replace("\"", ""), pluginData.image.strip().replace("\"", ""));
       }
     )*
-  )? "}" (<BREAK>)?
+  )? "}" (<BREAK>)*
   {
-    String pluginName = pluginIdent.image;
+    String pluginName = pluginIdent.image.strip();
     data.put("pluginName", pluginName.replace("\"", ""));
   }
   {
@@ -140,9 +137,10 @@ public Map<String, String> script() :
 {
   Token scriptData = null;
   Map<String, String> data = new HashMap<String, String>();
+  data.put("type", "script");
 }
 {
-  (<BREAK>)? <SCRIPT_DECLARATION> scriptData = <SCRIPT_CONTENT> (<BREAK>)?
+  (<BREAK>)? <SCRIPT_DECLARATION> scriptData = <SCRIPT_CONTENT> (<BREAK>)*
   {
     if (scriptData != null && scriptData.image != null) {
       String info = scriptData.image.replace("\"\"", "\"");
