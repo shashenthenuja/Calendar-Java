@@ -45,7 +45,7 @@ List<Map<String, String>> file() :
   Map<String, String> map;
 }
 {
-  (<BREAK>)? (
+  (<BREAK>)* (
     map = event()
     {
       resultList.add(map);
@@ -60,7 +60,7 @@ List<Map<String, String>> file() :
     {
       resultList.add(map);
     }
-  )* (<BREAK>)?
+  )* (<BREAK>)*
   <EOF>
   {
     return resultList;
@@ -76,7 +76,7 @@ public Map<String, String> event() :
   data.put("type", "event");
 }
 {
-  eventToken = <EVENT_DECLARATION> dateToken = <EVENT_DATE> ("all-day" { data.put("duration", "0"); } | timeToken = <EVENT_TIME> numberToken = <EVENT_DURATION>) stringToken = <EVENT_TITLE> (<BREAK>)?
+  eventToken = <EVENT_DECLARATION> dateToken = <EVENT_DATE> (( <BREAK> )* "all-day" ( <BREAK> )* { data.put("duration", "0"); } | timeToken = <EVENT_TIME> numberToken = <EVENT_DURATION>) stringToken = <EVENT_TITLE> (<BREAK>)*
   {
     String event = eventToken.image;
     String date = dateToken.image;
@@ -110,13 +110,13 @@ public Map<String, String> plugin() :
   <PLUGIN_DECLARATION> pluginIdent = <PLUGIN_IDENTIFIER> ( <BREAK> )* "{" ( <BREAK> )*  
   (
     (
-      pluginKey = <PLUGIN_IDENTIFIER> ( <BREAK> )* ":" ( <BREAK> )* pluginData = <EVENT_TITLE> (<BREAK>)?
+      pluginKey = <PLUGIN_IDENTIFIER> ( <BREAK> )* ":" ( <BREAK> )* pluginData = <EVENT_TITLE> (<BREAK>)*
       { 
         data.put(pluginKey.image.strip().replace("\"", ""), pluginData.image.strip().replace("\"", ""));
       }
     )
-    ("," (<BREAK>)?
-      pluginKey = <PLUGIN_IDENTIFIER> ( <BREAK> )* ":" ( <BREAK> )* pluginData = <EVENT_TITLE> (<BREAK>)?
+    ("," (<BREAK>)*
+      pluginKey = <PLUGIN_IDENTIFIER> ( <BREAK> )* ":" ( <BREAK> )* pluginData = <EVENT_TITLE> (<BREAK>)*
       { 
         data.put(pluginKey.image.strip().replace("\"", ""), pluginData.image.strip().replace("\"", ""));
       }
