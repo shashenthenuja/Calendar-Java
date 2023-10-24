@@ -120,9 +120,9 @@ public class Control {
                     for (Event e : eventList) {
                         if (e.getColumnIndex(currentDateTime) == j && e.getRowIndex() == i
                                 && e.getEventDuration() != 0) {
-                            val = e.getEventDetails(bundle);
+                            val = e.getEventDetails(bundle, locale);
                         } else if (e.getColumnIndex(currentDateTime) == j && e.getEventDuration() == 0 && i == 24) {
-                            val = e.getEventDetails(bundle);
+                            val = e.getEventDetails(bundle, locale);
                         }
                     }
                 }
@@ -162,10 +162,10 @@ public class Control {
             try {
                 System.out.println(bundle.getString("ui_results") + " " + query + " :- \n");
                 System.out.println(
-                        bundle.getString("ui_event_details") + " : \n\n" + result.getSearchEventDetails(bundle));
+                        bundle.getString("ui_event_details") + " : \n\n" + result.getSearchEventDetails(bundle, locale));
             } catch (MissingResourceException e) {
                 System.out.println("Results for " + query + " : \n");
-                System.out.println("Event Details : \n\n" + result.getSearchEventDetails(bundle));
+                System.out.println("Event Details : \n\n" + result.getSearchEventDetails(bundle, locale));
             }
         } else {
             displayCalendar();

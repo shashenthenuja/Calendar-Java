@@ -11,11 +11,13 @@ public class DataLoader {
     private List<LoaderAPI> notifyList = new ArrayList<>();
     private List<Event> eventList;
     private ResourceBundle bundle;
+    private Locale locale;
 
-    public DataLoader(List<Map<String, String>> data, List<Event> events, ResourceBundle bundle) {
+    public DataLoader(List<Map<String, String>> data, List<Event> events, ResourceBundle bundle, Locale locale) {
         this.data = data;
         this.eventList = events;
         this.bundle = bundle;
+        this.locale = locale;
     }
 
     public void loadEvents() {
@@ -44,7 +46,7 @@ public class DataLoader {
             for (Map<String, String> map : data) {
                 if (map.get("type").equals("plugin")) {
                     String className = map.get("pluginName");
-                    LoaderAPI pluginAPI = new LoaderAPI(map, eventList, bundle);
+                    LoaderAPI pluginAPI = new LoaderAPI(map, eventList, bundle, locale);
                     if (map.get("pluginName").equals("edu.curtin.calplugins.Notify")) {
                         notifyList.add(pluginAPI);
                     } else {

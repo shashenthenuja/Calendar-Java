@@ -22,7 +22,7 @@ public class App {
             try {
                 FileIO file = new FileIO(args);
                 file.parseFile();
-                DataLoader loader = new DataLoader(file.getData(), eventList, bundle);
+                DataLoader loader = new DataLoader(file.getData(), eventList, bundle, locale);
                 loader.loadEvents();
                 loader.loadPlugins();
                 loader.loadScripts();

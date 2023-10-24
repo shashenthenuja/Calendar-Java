@@ -1,6 +1,7 @@
 package edu.curtin.assignment2.coreapp;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -11,11 +12,13 @@ public class LoaderAPI implements PluginAPI {
     private Map<String, String> args;
     private List<Event> eventList;
     private ResourceBundle bundle;
+    private Locale locale;
 
-    public LoaderAPI(Map<String, String> args, List<Event> eventList, ResourceBundle bundle) {
+    public LoaderAPI(Map<String, String> args, List<Event> eventList, ResourceBundle bundle, Locale locale) {
         this.args = args;
         this.eventList = eventList;
         this.bundle = bundle;
+        this.locale = locale;
     }
 
     public LoaderAPI(List<Event> eventList) {
@@ -35,6 +38,11 @@ public class LoaderAPI implements PluginAPI {
     @Override
     public ResourceBundle getBundle() {
         return bundle;
+    }
+
+    @Override
+    public Locale getLocale() {
+        return locale;
     }
 
 }

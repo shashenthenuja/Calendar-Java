@@ -2,6 +2,7 @@ package edu.curtin.calplugins;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import edu.curtin.assignment2.pluginapi.API;
@@ -13,12 +14,14 @@ public class Notify implements API {
     private String query;
     private List<Event> eventList;
     private ResourceBundle bundle;
+    private Locale locale;
 
     @Override
     public void start(PluginAPI api) {
         this.query = api.getArgs().get("query");
         this.eventList = api.getEvents();
         this.bundle = api.getBundle();
+        this.locale = api.getLocale();
         notify(query);
     }
 
@@ -30,10 +33,10 @@ public class Notify implements API {
                         if (event.getEventName().toLowerCase().trim().contains(query.toLowerCase().trim())) {
                             try {
                                 System.out.println("\n" + bundle.getString("ui_today_events") + " :");
-                                System.out.println(event.getSearchEventDetails(bundle) + "\n");
+                                System.out.println(event.getSearchEventDetails(bundle, locale) + "\n");
                             } catch (Exception e) {
                                 System.out.println("\n" + "Today's Events :");
-                                System.out.println(event.getSearchEventDetails(bundle) + "\n");
+                                System.out.println(event.getSearchEventDetails(bundle, locale) + "\n");
                             }
                         }
                     }
