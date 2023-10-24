@@ -1,15 +1,27 @@
-event 2023-10-29 15:00:00 90 "Meeting 1"
+event 2023-10-24 12:00:00  90 "Meeting 1"
+
 event 2023-10-31 08:30:45 45 "Meeting 2"
-plugin com.example.pluginpkg.ExamplePlugin
+
+event 2023-10-24 13:00:00 90 "Today"
+
+plugin edu.curtin.calplugins.Repeat
 {
-    key1: "value 1",
-    key2: "value 2"
+    startDate: "2023-10-30",
+    title: "Presentation",
+    repeat: "2"
 }
+
 event 2023-12-25
-    all-day "Christmas Day"
-plugin com.example.plugin2pkg.DemoPlugin { keyA: "X", keyB: "Y", keyC: "Z" }
+    all-day "Joeoeo"
+    
+plugin edu.curtin.calplugins.Notify { query: "today" }
+
+plugin edu.curtin.calplugins.Notify { query: "meeting" }
+
+plugin edu.curtin.calplugins.Repeat { startDate: "2023-11-01", startTime: "08:30:45", duration: "30", repeat: "2", title: "FINISH" }
 
 script "
+
 # Script to add events 
 print(""Starting script..."")
 from java.util import HashMap
