@@ -22,10 +22,10 @@ public class Notify implements API {
         this.eventList = api.getEvents();
         this.bundle = api.getBundle();
         this.locale = api.getLocale();
-        notify(query);
+        notifyEvents();
     }
 
-    public void notify(String notifyQuery) {
+    public void notifyEvents() {
         if (!eventList.isEmpty()) {
             for (Event event : eventList) {
                 if (LocalDateTime.now().toLocalDate().equals(event.getEventDate().toLocalDate())) {
