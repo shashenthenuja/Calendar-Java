@@ -1,8 +1,18 @@
-event 2023-10-24 12:00:00  90 "Meeting 1"
+event 2023-10-25 12:00:00  90 "Meeting 1"
 
 event 2023-10-31 08:30:45 45 "Meeting 2"
 
-event 2023-10-24 13:00:00 90 "Today"
+event 
+
+2023-10-25 
+
+13:00:00 
+
+190 
+
+
+"Assignment"
+
 
 plugin edu.curtin.calplugins.Repeat
 {
@@ -14,11 +24,22 @@ plugin edu.curtin.calplugins.Repeat
 event 2023-12-26
     all-day "My Holiday"
     
-plugin edu.curtin.calplugins.Notify { query: "today" }
+plugin edu.curtin.calplugins.Notify { query: "assignment" }
 
 plugin edu.curtin.calplugins.Notify { query: "meeting" }
 
-plugin edu.curtin.calplugins.Repeat { startDate: "2023-11-01", startTime: "08:30:45", duration: "30", repeat: "4", title: "Working Day" }
+plugin 
+
+edu.curtin.calplugins.Repeat
+
+{ 
+
+startDate: "2023-11-01", 
+startTime: "08:30:45", 
+duration: "30", 
+repeat: "4", 
+title: "Working Day" 
+}
 
 script "
 
